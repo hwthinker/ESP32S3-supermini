@@ -105,15 +105,19 @@ void loop() {
 
 ## Upload program
 
-**CARA UPLOAD** klik upload program di komputer. akan muncul tulisan
+Bila tampilan seperti ini maka anda harus mengkonfigurasi ESP32 anda agar bisa melakukan download
 
 ```
 - ---esptool.py v3.0-dev
 - ---Serial port COM…
 - ---Connecting........_____....._____.....__
 ```
-- **Tekan dan tahan** tombol Boot bersamaan itu Klik(**tekan dan lepas**) tombol reset
-- **Lepas** tombol reset/EN dan **tetap tekan** tombol 0/Boot . akan muncul info berikut
+Langkah yang harus dilakukan
+
+- Tekan dan tahan tombol Boot/0  
+- Klik(tekan dan lepas) tombol reset/EN sambil tetap tekan tombol Boot .
+- Lepas tombol boot
+- Klik tombol upload pada Arduino IDE, bila sukses akan menampilkan info
 
 ```cpp
 - ---Compressed 261792 bytes to 122378...
@@ -121,8 +125,7 @@ void loop() {
 - ---Writing at 0x00014000... (25 %)
 - ---Writing at 0x00018000... (37 %)
 ```
-- Bila sudah muncul tulisan Writing at 0x0000e000... (sekian %), maka tombol Boot boleh dilepas
-- Setelah itu Wajib klik tombol **reset** sekali lagi untuk berpindah dari mode download menjadi mode run
+- Setelah selesai Wajib klik tombol **reset** sekali lagi untuk berpindah dari mode download menjadi mode run
 
 > [!NOTE]  
 > INGAT YA WAJIB Di Klik Tombol RESET setelah proses upload selesai, tanpa itu program yang baru diupload tidak akan dijalankan
@@ -142,6 +145,26 @@ void loop() {
    - **"ON"** saat LED mati.
 
 Program ini merupakan contoh sederhana namun sangat efektif untuk mempelajari komunikasi serial dan mengintegrasikannya dengan kontrol perangkat keras seperti LED. Selamat mencoba! 🚀
+
+
+
+## Pemecahan Masalah
+
+### A. Port Com  tidak dapat dikenali di Arduino
+
+Masuk ke mode unduh: 
+
+- Tekan dan tahan tombol Boot/0  
+- Klik(tekan dan lepas) tombol reset/EN sambil tetap tekan tombol Boot .
+- Lepas tombol boot
+- Setelah selesai Wajib klik tombol **reset** sekali lagi untuk berpindah dari mode download menjadi mode run
+
+### B. Program tidak dapat berjalan setelah diunggah
+
+Setelah upload berhasil, Anda perlu menekan tombol Reset sebelum dapat dijalankan.
+
+### C. Port serial di Arduino tidak dapat mencetak
+Anda perlu mengatur USB CDC On Boot di toolbar untuk diaktifkan.
 
 **Referensi**
 
