@@ -146,6 +146,138 @@ Langkah yang harus dilakukan
 
 Program ini merupakan contoh sederhana namun sangat efektif untuk mempelajari komunikasi serial dan mengintegrasikannya dengan kontrol perangkat keras seperti LED. Selamat mencoba! 🚀
 
+## Contoh Program akses LED WS2812 di GPIO48
+
+Program ini dirancang untuk menghasilkan efek gradien warna halus pada LED WS2812 menggunakan pustaka FastLED.  Dengan memanfaatkan model warna HSV, warna akan berubah secara perlahan dalam siklus pelangi.
+
+Pastikan anda telah menginstall library Fastled. untuk Arduino 2.x dilakukan dengan cara klik icon library kemudian search fastled, setelah itu install
+
+![image-20241216074040162](./assets/image-20241216074040162.png)
+
+Program berikut akan  terus memperbarui warna LED berdasarkan nilai `hue`, yang berubah dari 0 ke 255 dan kembali ke 0 dalam sebuah siklus.
+
+Efek ini memberikan transisi warna yang lembut, karena model warna HSV mendukung perpindahan antar-warna secara kontinu.
+
+```c++
+#include "FastLED.h"
+
+#define NUM_LEDS 1       // Jumlah LED yang digunakan
+#define DATA_PIN 48      // Pin Data untuk kontrol LED
+#define LED_TYPE WS2812  // Tipe LED yang digunakan (WS2812/Neopixel)
+#define COLOR_ORDER GRB  // Urutan warna pada LED (Green-Red-Blue)
+
+// Variabel untuk mengontrol kecerahan LED (range: 0-255)
+uint8_t max_bright = 128;
+
+// Membuat array untuk menyimpan data LED
+CRGB leds[NUM_LEDS];
+
+// Variabel untuk gradien warna
+uint8_t hue = 0;  // Nilai hue awal (0-255, siklus warna pelangi)
+
+void setup() {
+    // Inisialisasi LED strip dengan konfigurasi yang telah ditentukan
+    FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
+
+    // Mengatur tingkat kecerahan LED
+    FastLED.setBrightness(max_bright);
+}
+
+void loop() {
+    // Mengatur warna LED berdasarkan nilai hue
+    leds[0] = CHSV(hue, 255, 255); // CHSV(hue, saturation, value)
+
+    // Memperbarui tampilan LED
+    FastLED.show();
+
+    // Increment nilai hue untuk transisi warna (0-255, lalu kembali ke 0)
+    hue++;
+
+    // Delay untuk memperhalus transisi warna
+    delay(20); // Semakin kecil nilai, semakin cepat transisi gradien
+}
+```
+
+
+
+## Contoh Program WS2812 simple
+
+Program ini dibuat untuk mengontrol LED WS2812 menggunakan pustaka **FastLED**. WS2812 adalah jenis LED RGB yang dapat dikontrol secara individu untuk menghasilkan warna yang beragam. Dalam program ini, Anda dapat mengatur:
+
+1. **Jumlah LED**: Diatur menggunakan `NUM_LEDS`.
+2. **Pin Data**: Pin yang digunakan untuk mengontrol LED, dalam hal ini `DATA_PIN`.
+3. **Kecerahan**: Diatur dengan variabel `max_bright`.
+
+Program ini mengimplementasikan logika sederhana di mana:
+
+- LED menyala dengan warna **hijau** pada salah satu posisi LED.
+
+​	``` leds[i] = CRGB::Green; ```
+
+- Bila diinginkan warna merah tinggal mengganti kode seperti ini
+ ``` leds[i] = CRGB::Red; ```
+- Setelah 1 detik, LED mati, dan kemudian melanjutkan ke posisi berikutnya.
+- Efek ini menciptakan ilusi seperti "berpindah-pindah cahaya hijau" jika lebih dari satu LED digunakan
+
+```c++
+#include "FastLED.h"
+
+#define NUM_LEDS 1       // Jumlah LED yang digunakan
+#define DATA_PIN 48      // Pin Data untuk kontrol LED (dapat diganti sesuai kebutuhan: 38, 16, 8, dll)
+#define LED_TYPE WS2812  // Tipe LED yang digunakan (WS2812/Neopixel)
+#define COLOR_ORDER GRB  // Urutan warna pada LED (Green-Red-Blue)
+
+// Variabel untuk mengontrol kecerahan LED (range: 0-255)
+// Semakin besar nilai, semakin terang LED
+uint8_t max_bright = 128;  
+
+// Membuat array untuk menyimpan data LED
+CRGB leds[NUM_LEDS];     
+
+// Variabel untuk menghitung urutan LED yang menyala
+char i = 0;              
+
+void setup() {
+    // Inisialisasi LED strip dengan konfigurasi yang telah ditentukan
+    LEDS.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
+    
+    // Mengatur tingkat kecerahan LED
+    FastLED.setBrightness(max_bright);
+}
+
+void loop() {
+    // Reset counter jika sudah mencapai LED terakhir
+    if (i == NUM_LEDS) {
+        i = 0;
+    }
+    
+    // Menyalakan LED dengan warna Hijau
+    leds[i] = CRGB::Green;
+    
+    // Memperbarui tampilan LED
+    FastLED.show();
+    
+    // Jeda 50 milidetik
+    delay(1000);
+    
+    // Mematikan LED (warna hitam = LED mati)
+    leds[i] = CRGB::Black;
+    
+    // Memperbarui tampilan LED
+    FastLED.show();
+    
+    // Jeda 50 milidetik
+    delay(50);
+    
+    // Pindah ke LED berikutnya
+    i++;
+}
+```
+
+> [!NOTE]
+>
+> Pada board terdapat 2 LED yaitu LED biasa dan LED RGB WS2812 yang punya port yang sama (GPIO48). bila terdapat program yang mengakses GPIO48 dengan library WS2812 maka  hanya LED WS2812 yang akan merespon, bila terdapat program blinky biasa , maka LED biasa yang merespon
+
 
 
 ## Pemecahan Masalah
